@@ -16,7 +16,6 @@ r = r-cbar; %Adjustment for demand function
 %Coding choices
 %----------------
 Iter = 1;  %Iter = 1 turns on iterative algorithm (advisable for large H).
-Fixed = 0; %Fixed  = 1: Pick fixed rather than time-varying (fitness-based) population shares. 
 n_iter = 6; % no. of iterations (increase for large H)
 Unconstrained = 0; %Set Unconstrained = 1 to simulate without short-selling constraints. 
 T = 500;  %no. of periods
