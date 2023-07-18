@@ -1,4 +1,7 @@
 %Stock market model with short-selling constraint and endogenous shares: simulations 
+%Simulations of price scenarios (Fig. 3), omitting simulation of wealth
+%This code is faster than the ...SIMS.m version when wealth not needed
+%Used for the timed simulations presented in Table 2 of the paper
 %Last updated: July 26, 2022. Written by Michael Hatcher (m.c.hatcher@soton.ac.uk)
 
 %clear, clc, %close all; 
@@ -6,12 +9,12 @@
 %------------------
 %Parameter values
 %------------------
-H = 10000;
+H = 50000;  %No. of types
 r = 0.1; a = 1; 
 betta = 4.5; %3, 4.5
 dbar = 0.6; sigma = 1; Zbar = 0.1;  
 pf = (dbar - a*sigma^2*Zbar)/r; %Fundamental price
-kappa = 0.1;  %Alternative uptick rule
+kappa = 0;  %Alternative uptick rule
 
 %----------------
 %Coding choices
@@ -31,10 +34,11 @@ Check1 = NaN(T,1); Check11 = Check1; Beliefs = NaN(H,1);
 %--------------------------
 %Generate dividend shocks 
 %--------------------------
-rng(1), sigma_d  = 0.0099;   
-pd = makedist('Normal','mu',0,'sigma',sigma_d);  %Truncated normal distribution
-pd_t = truncate(pd,-dbar,dbar);
-shock = random(pd_t,T,1);   
+%Uncomment initially to store shocks in memory
+%rng(1), sigma_d  = 0.0099;   
+%pd = makedist('Normal','mu',0,'sigma',sigma_d);  %Truncated normal distribution
+%pd_t = truncate(pd,-dbar,dbar);
+%rng(1), shock = random(pd_t,T,1);   
 %NB. For timed sims, store shock in workspace and comment out other lines
 
 %-------------------------------
@@ -113,7 +117,7 @@ kstar = k;  Bind_no(t) = k;   %No. of constrained types
        x(t) = ( n_adj(kstar+1:end)*Beliefs_sort(kstar+1:end) - sum(n_adj(1:kstar))*a*sigma^2*Zbar  ) / ( (1+r)*sum(n_adj(kstar+1:end)) );   
        
 else 
-        x(t) = xstar;   %Solution when SS constraints are slack           
+        x(t) = xstar;   %Solution when SS constraints are slack or ignored           
 end
 
 %-------------------------------------------------------
