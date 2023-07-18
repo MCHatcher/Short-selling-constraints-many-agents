@@ -1,6 +1,5 @@
 %Stock market model with short-selling constraint and endogenous shares: bifurcation diagrams 
-%Last updated: July 26, 2022. Written by Michael Hatcher
-%(m.c.hatcher@soton.ac.uk)
+%Last updated: July 26 2022. Written by Michael Hatcher (m.c.hatcher@soton.ac.uk).
 
 clear; clc; %close all; 
 
@@ -19,15 +18,15 @@ kappa = 0.1;  %Alt. uptick rule
 Iter = 1;  %Iter = 1 turns on iterative algorithm (advisable for large H).
 n_iter = 6; % no. of iterations 
 Back = 0;  %Forward search is the default. Else solve backward from most optimistic type. 
-Unconstrained = 0; %Set Unconstrained = 1 to simulate without short-selling constraints. 
+Unconstrained = 1; %Set Unconstrained = 1 to simulate without short-selling constraints. 
 
 %----------------------
 %Specify belief types
 %----------------------
 
-%run Stock_market_shorting_insert_benchmark
-run Stock_market_shorting_insert_disperse
-%run Stock_market_shorting_insert_disperse2
+run Stock_market_shorting_insert_benchmark
+%run Stock_market_shorting_insert_disperse   %Old file to plot additional results
+%run Stock_market_shorting_insert_disperse2   %Old file to plot additional results
 
 num_betta = length(betta_stack);  dev = NaN(num_betta,1); dev1 = dev; dum = dev;
 
@@ -42,10 +41,10 @@ shock = zeros(T,1);  %Deterministic skeleton
 n_init = 1/H*ones(1,H);
 
 %Baseline case
-%rng(3); init_stack = pf - 4*rand(M,1);
+rng(3); init_stack = pf - 4*rand(M,1);
 
 %Disperse beliefs
-rng(3);  init_stack = pf - 4*rand(M,1); 
+%rng(3);  init_stack = pf - 4*rand(M,1); 
 
 %Disperse beliefs 2
 %rng(3); init_stack = pf - 4 + 8*rand(M,1);
@@ -145,7 +144,7 @@ kstar = k;  %Bind_no(t) = k;
        x(t) = ( n_adj(kstar+1:end)*Beliefs_sort(kstar+1:end) - sum(n_adj(1:kstar))*a*sigma^2*Zbar  ) / ( (1+r)*sum(n_adj(kstar+1:end)) );   
        
 else 
-        x(t) = xstar;           
+        x(t) = xstar;    %Solution when SS constraints are slack or ignored       
 end
 
 %------------------------
@@ -204,7 +203,8 @@ max(dum)
 %-----------------
 % Plot results
 %-----------------
-%Bifurcation_plotter_base
-Bifurcation_plotter_comp
-%Bifurcation_plotter_comp2
+Bifurcation_plotter_base
+
+%Bifurcation_plotter_comp  %Old file to plot additional results
+%Bifurcation_plotter_comp2  %Old file to plot additional results
         
