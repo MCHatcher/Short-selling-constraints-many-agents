@@ -1,4 +1,4 @@
-%Stock market model with short-selling constraint and endogenous shares: simulations 
+%Stock market model with short-selling constraint and fixed pop. shares: simulations 
 %Last updated: Dec 12, 2022. Written by Michael Hatcher (m.c.hatcher@soton.ac.uk)
 
 clear, clc, %close all; 
@@ -31,6 +31,7 @@ Check1 = NaN(T,1); Check11 = Check1; Beliefs = NaN(H,1);
 %--------------------------
 %Generate dividend shocks 
 %--------------------------
+%Uncomment initially to store shocks in memory
 %rng(1), sigma_d  = 0.0099;   
 %pd = makedist('Normal','mu',0,'sigma',sigma_d);  %Truncated normal distribution
 %pd_t = truncate(pd,-dbar,dbar);
@@ -55,9 +56,8 @@ g3(1:H/3) = 0; g4(1:H/3) = 0; gf(1:H/3) = 0; %u_stack(1:H/3,1:T) = 0;
 %Contrarians
 g1(H/3+1:H*2/3) = 0; g2(H/3+1:H*2/3) = 0; gf(H/3+1:H*2/3) = 0; %u_stack(H/3+1:H*2/3,1:T) = 0;
 
-%Fundamentalists
+%Fundamentalists (Arbitrageurs)
 g1(H*2/3+1:end) = 0; g2(H*2/3+1:end) = 0; g3(H*2/3+1:end) = 0; g4(H*2/3+1:end) = 0;
-
 
 for t=1:T 
     
@@ -116,7 +116,7 @@ kstar = k;  Bind_no(t) = k;   %No. of constrained types
        p(t) = ( n_adj(kstar+1:end)*Beliefs_sort(kstar+1:end) - sum(n_adj(1:kstar))*a*sigma^2*Zbar  ) / ( (1+r)*sum(n_adj(kstar+1:end)) );   
        
 else 
-        p(t) = pstar;   %Solution when SS constraints are slack           
+        p(t) = pstar;   %Solution when SS constraints are slack or ignored          
 end
 
 %-------------------------------------------------------
@@ -124,6 +124,8 @@ end
 %-------------------------------------------------------
     D = (Beliefs + a*sigma^2*Zbar - (1+r)*p(t))/(a*sigma^2);
     D_adj = (Beliefs_sort + a*sigma^2*Zbar - (1+r)*p(t))/(a*sigma^2);
+    %kstar_check(t,1) = sum(D<0);
+    %kstar_check2(t,1) = sum(D_adj<0);
     if Bind(t) == 1
         D(D<0) = 0;  
         D_adj(D_adj<0) = 0; 
@@ -136,6 +138,8 @@ end
 %Accuracy checks
 max(Check1)
 max(Check11)
+%max(abs(Bind_no - kstar_check))
+%max(abs(Bind_no - kstar_check2))
      
 %figure(1)
 %subplot(1,2,1), hold on, plot(0:20,[p0; p(1:20)],'k'), title('Asset price'), xlabel('Time, t')
