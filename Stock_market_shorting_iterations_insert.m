@@ -1,6 +1,6 @@
-%Stock market iterations (July 2022)
-%Iterative prcoedure to be used in conjunction with Stock_market_shorting.m. The file is run
-%automatically if Iter = 1. It is advisable to set Iter = 1 when H (no. of types) is large. 
+%Use of iterations to speed up the solution with short-selling constraints
+%The file is run automatically if Iter = 1. It is advisable to set Iter = 1 when H (no. of types) is large.
+%Last updated: July 26, 2022. Written by Michael Hatcher (m.c.hatcher@soton.ac.uk)
 
 j = k_init0;
 
