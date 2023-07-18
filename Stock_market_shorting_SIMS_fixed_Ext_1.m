@@ -1,4 +1,5 @@
-%Stock market model with short-selling constraint and endogenous shares: simulations 
+%Stock market model with short-selling constraint and fixed pop. shares: simulations 
+%Case of heterogeneity in response of beliefs to the current price (Fig. 1)
 %Last updated: Dec 12, 2022. Written by Michael Hatcher (m.c.hatcher@soton.ac.uk)
 
 clear, clc, %close all; 
@@ -20,7 +21,7 @@ n_iter = 6; % no. of iterations (increase for large H)
 Unconstrained = 0; %Set Unconstrained = 1 to simulate without short-selling constraints. 
 T = 500;  %no. of periods
 rng(5)  %Set random seed
-cbar = 1 - 0.05 + 2*0.05*rand(H,1);  %0.998 + 0.004   0.95 + 0.1  cbar = 1 - 0.002 + 2*0.002*rand(H,1);  1-1e-6 + 2e-6*rand(H,1);  1-0.03 + 2*0.03*rand(H,1);
+cbar = 1 - 0.05 + 2*0.05*rand(H,1);  %cbar = 1 - 0.005 + 2*0.005*rand(H,1); 
 R = 1+r-cbar;   R_inv = 1./R;
 
 %----------------------
@@ -32,6 +33,7 @@ Check1 = NaN(T,1); Check11 = Check1; Beliefs = NaN(H,1);
 %--------------------------
 %Generate dividend shocks 
 %--------------------------
+%Uncomment initially to store shocks in memory
 %rng(1), sigma_d  = 0.0099;   
 %pd = makedist('Normal','mu',0,'sigma',sigma_d);  %Truncated normal distribution
 %pd_t = truncate(pd,-dbar,dbar);
@@ -59,7 +61,6 @@ g1(H/3+1:H*2/3) = 0; g2(H/3+1:H*2/3) = 0; gf(H/3+1:H*2/3) = 0; %u_stack(H/3+1:H*
 %Fundamentalists
 g1(H*2/3+1:end) = 0; g2(H*2/3+1:end) = 0; g3(H*2/3+1:end) = 0; g4(H*2/3+1:end) = 0; 
 
-
 for t=1:T 
     
     %Beliefs = NaN(H,1);
@@ -75,7 +76,7 @@ for t=1:T
     else
         Beliefs = b + (g1+g3)*(p(t-1) - p(t-2)) + (g2+g4)*(p(t-2) -p(t-3)) + gf*(p(t-1)-pf) + u + dbar -a*sigma^2*Zbar;
     end
- 
+   
        
 %------------------------------    
 %Trial unconstrained solution
@@ -120,7 +121,7 @@ kstar = k;  Bind_no(t) = k;   %No. of constrained types
        p(t) = ( n_adj(kstar+1:end)*Beliefs_sort(kstar+1:end) - sum(n_adj(1:kstar))*a*sigma^2*Zbar  ) / ( sum(n_adj_tild(kstar+1:end)) );   
        
 else 
-        p(t) = pstar;   %Solution when SS constraints are slack           
+        p(t) = pstar;   %Solution when SS constraints are slack or ignored           
 end
 
 %-------------------------------------------------------
