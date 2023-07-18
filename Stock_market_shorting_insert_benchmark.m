@@ -1,4 +1,4 @@
-%Stock_market_shorting_insert_benchmark
+%Stock_market_shorting_insert_benchmark. Used to plot Fig. 2 in the paper.
 
 %Parameter values
 M = 20;  %No. of initial values 
