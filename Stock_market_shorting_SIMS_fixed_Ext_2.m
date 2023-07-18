@@ -1,4 +1,5 @@
-%Stock market model with short-selling constraint and endogenous shares: simulations 
+%Stock market model with short-selling constraint and fixed pop. shares: simulations 
+%Case of heterogeneity in subjective variances of different types (Sec. 4.2, Supp. Appendix)
 %Last updated: Dec 12, 2022. Written by Michael Hatcher (m.c.hatcher@soton.ac.uk)
 
 clear, clc, %close all; 
@@ -25,7 +26,7 @@ T = 500;  %no. of periods
 %----------------------
 %Set initial random seed
 rng(1)
-var_h = a*( 0.9 + 0.2*rand(1,H) );
+var_h = a*( 0.9 + 0.2*rand(1,H) );  %var_h = a*( 0.99 + 0.02*rand(1,H) );
 rng(5)  %Set random seed
 a_tild = 1./var_h;  a_tild_orig = a_tild;
 a_tild_prime = a_tild'; a_tild_orig_prime = a_tild_orig'; 
@@ -36,6 +37,7 @@ Check1 = NaN(T,1); Check11 = Check1; Beliefs = NaN(H,1); Demand_star = D; Demand
 %--------------------------
 %Generate dividend shocks 
 %--------------------------
+%Uncomment initially to store shocks in memory
 %rng(1), sigma_d  = 0.0099;   
 %pd = makedist('Normal','mu',0,'sigma',sigma_d);  %Truncated normal distribution
 %pd_t = truncate(pd,-dbar,dbar);
@@ -131,7 +133,7 @@ kstar = k;  Bind_no(t) = k;   %No. of constrained types
        p(t) = ( n_adj_tild(kstar+1:end)*Beliefs_sort(kstar+1:end) - sum(n_adj(1:kstar))*Zbar  ) / ( (1+r)*sum(n_adj_tild(kstar+1:end)) );   
        
 else 
-        p(t) = pstar;   %Solution when SS constraints are slack           
+        p(t) = pstar;   %Solution when SS constraints are slack or ignored          
 end
 
 %-------------------------------------------------------
