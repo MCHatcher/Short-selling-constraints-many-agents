@@ -34,16 +34,6 @@ a_tild_prime = a_tild'; a_tild_orig_prime = a_tild_orig';
 Bind = zeros(T,1); Bind_no = Bind;  D = NaN(H,1); D_lag2 = D; p = NaN(T,1); Time = p;
 Check1 = NaN(T,1); Check11 = Check1; Beliefs = NaN(H,1); Demand_star = D; Demand_star1 = D;
 
-%--------------------------
-%Generate dividend shocks 
-%--------------------------
-%Uncomment initially to store shocks in memory
-%rng(1), sigma_d  = 0.0099;   
-%pd = makedist('Normal','mu',0,'sigma',sigma_d);  %Truncated normal distribution
-%pd_t = truncate(pd,-dbar,dbar);
-%rng(1), shock = random(pd_t,T,1);   
-%NB. For timed sims, store shock in workspace and comment out other lines
-
 %-------------------------------
 %Initial values and predictors 
 %-------------------------------
