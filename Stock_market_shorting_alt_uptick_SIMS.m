@@ -1,4 +1,5 @@
 %Stock market model with short-selling constraint and endogenous shares: simulations 
+%Simulations of price scenarios and the Gini (Figs. 3 and 4)
 %Last updated: July 26, 2022. Written by Michael Hatcher (m.c.hatcher@soton.ac.uk)
 
 clear, clc, %close all; 
@@ -135,7 +136,7 @@ kstar = k;  Bind_no(t) = k;   %No. of constrained types
        x(t) = ( n_adj(kstar+1:end)*Beliefs_sort(kstar+1:end) - sum(n_adj(1:kstar))*a*sigma^2*Zbar  ) / ( (1+r)*sum(n_adj(kstar+1:end)) );   
        
 else 
-        x(t) = xstar;   %Solution when SS constraints are slack            
+        x(t) = xstar;   %Solution when SS constraints are slack or ignored            
 end
 
 %-----------------------
@@ -171,16 +172,23 @@ count(Wealth==realmin) = 1;
 Wealth_vec(:,t) = Wealth/max(Wealth);
 Wealth_norm = Wealth_vec(:,t);
 
-    for i=1:length(Wealth)
-        for j=1:length(Wealth)
+    %for i=1:length(Wealth)
+        %for j=1:length(Wealth)
        
-            Diff(j) = abs(Wealth_norm(i)-Wealth_norm(j));
+            %Diff(j) = abs(Wealth_norm(i)-Wealth_norm(j));
             
-        end 
-        sum_tot(i) = sum(Diff); 
-    end
+        %end 
+        %sum_tot(i) = sum(Diff); 
+    %end
+
+    %Fast approach to calculate Gini
+    V = Wealth_norm';
+    Diff_mat = bsxfun(@minus,V(:), V(:).');
+    Diff_mat = abs(Diff_mat);
+    sum_tot = sum(Diff_mat,1);
     
     Gini(t) = sum(sum_tot)/(2*(length(Wealth_norm))^2*mean(Wealth_norm));
+    
     Zero_wealth(t) = sum(count); 
     Rel_wealth = Wealth/max(Wealth);
 
